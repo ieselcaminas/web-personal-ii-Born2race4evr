@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block title%}Contact{% endblock %}
+{% block h1%}Contact{% endblock %}
+{% block body%}
+<!-- Contact Section -->
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-5 my-3">
+                    <h6 class="mb-0">Phone</h6>
+                    <p class="mb-4">+ 123-456-7890</p>
+
+                    <h6 class="mb-0">Address</h6>
+                    <p class="mb-4">12345 Fake ST NoWhere AB Country</p>
+
+                    <h6 class="mb-0">Email</h6>
+                    <p class="mb-0">info@website.com</p>
+                    <p></p>
+                </div>
+                <div class="col-md-7">
+                    {{ form_start(form, {'attr': {'class':'form-horizontal'}}) }}
+                    {{ form_errors(form) }}
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                {{ form_row(form.firstName, {'attr': {'class':'form-control'}}) }}
+                            </div>
+                            <div class="col-xs-6">
+                                {{ form_row(form.lastName, {'attr': {'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                {{ form_row(form.email, {'attr': {'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                {{ form_row(form.subject, {'attr': {'class':'form-control'}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                {{ form_row(form.message, {'attr': {'class':'form-control'}}) }}
+                                {{ form_row(form.Send, {'attr': {'class':'pull-right btn btn-lg sr-button'}}) }}
+                            </div>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            <!-- Page Footer -->
+            <footer class="mt-5 py-4 border-top border-secondary">
+                <p class="mb-0 small">&copy; <script>document.write(new Date().getFullYear())</script>, LeadMark Created By <a href="https://www.devcrud.com" target="_blank">DevCrud.</a>  All rights reserved </p>     
+            </footer>
+            <!-- End of Page Footer -->  
+        </div>
+{% endblock %}
