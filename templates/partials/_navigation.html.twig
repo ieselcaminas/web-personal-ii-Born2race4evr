@@ -1,8 +1,6 @@
-<!-- page Navigation -->
 <nav class="navbar custom-navbar navbar-expand-md navbar-light fixed-top" data-spy="affix" data-offset-top="10">
     <div class="container">
-        <a class="navbar-brand" href="{{ path('index') }}">
-            <img src="assets/imgs/logo.svg" alt="">
+        <a class="navbar-brand" href="{{ path('index') }}"> <img src="assets/imgs/logo.svg" alt="">
         </a>
         <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -10,22 +8,40 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">                     
                 <li class="{{ (app.request.attributes.get('_route') == 'about')  ? 'active': ''}} lien">
-                    <a class="nav-link" href="{{ path('about') }}"></i> About</a></li>
+                    <a class="nav-link" href="{{ path('about') }}">About</a>
                 </li>
                 <li class="{{ (app.request.attributes.get('_route') == 'portfolio')  ? 'active': ''}} lien">
-                    <a class="nav-link" href="{{ path('portfolio') }}"></i> Portfolio</a></li>
+                    <a class="nav-link" href="{{ path('portfolio') }}">Portfolio</a>
                 </li>
                 <li class="{{ (app.request.attributes.get('_route') == 'blog')  ? 'active': ''}} lien">
-                    <a class="nav-link" href="{{ path('blog') }}"></i> Blog</a></li>
+                    <a class="nav-link" href="{{ path('blog') }}">Blog</a>
                 </li>
                 <li class="{{ (app.request.attributes.get('_route') == 'contact')  ? 'active': ''}} lien">
-                    <a class="nav-link" href="{{ path('contact') }}"></i> Contact</a></li>
+                    <a class="nav-link" href="{{ path('contact') }}">Contact</a>
                 </li>
                 <li class="{{ (app.request.attributes.get('_route') == 'components')  ? 'active': ''}} lien">
-                    <a class="nav-link" href="{{ path('components') }}"></i> Components</a></li>
+                    <a class="nav-link" href="{{ path('components') }}">Components</a>
                 </li>
-            </ul>
+
+                {% if app.user %}
+                    <li class="lien">
+                        <a class="nav-link" href="{{ path('app_logout') }}">
+                            <i class="fa fa-sign-out sr-icons"></i> {{ app.user.email }} - Logout
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="{{ (app.request.attributes.get('_route') == 'app_login') ? 'active': ''}} lien">
+                        <a class="nav-link" href="{{ path('app_login') }}">
+                            <i class="fa fa-sign-in sr-icons"></i> Login
+                        </a>
+                    </li>   
+                    <li class="{{ (app.request.attributes.get('_route') == 'app_register') ? 'active': ''}} lien">
+                        <a class="nav-link" href="{{ path('app_register') }}">
+                            <i class="fa fa-user-secret sr-icons"></i> Register
+                        </a>
+                    </li>
+                {% endif %}
+                </ul>
         </div>
     </div>
 </nav>
-<!-- End Of Second Navigation -->

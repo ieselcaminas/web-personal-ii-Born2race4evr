@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Categories{% endblock %}
+{% block h1 %}Categories{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light py-5">
+        
+        <div class="card shadow-lg p-4 border-0 rounded-3 mb-5" style="max-width: 600px; width: 100%;">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold gradient-title">New Category</h2>
+                <hr class='divider'>
+            </div>
+
+            {{ form_start(form) }}
+                <div class="card-body p-0">
+                    <div class="mb-3">
+                        {{ form_label(form.name, 'Nombre', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class':'form-control', 'placeholder':'El nombre de la categoría'}}) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill shadow-sm">Guardar Categoría</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+
+        <div class="card shadow-lg p-4 border-0 rounded-3" style="max-width: 600px; width: 100%;">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold gradient-title">All Categories</h2>
+                <hr class='divider'>
+            </div>
+
+            <div class="card-body p-0">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nombre</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <th scope="row">{{ category.id }}</th>
+                                <td>{{ category.name }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="text-center text-muted">
+                                    No hay categorías registradas.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
