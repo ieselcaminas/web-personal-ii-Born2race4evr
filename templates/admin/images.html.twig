@@ -6,15 +6,76 @@
 {% block body %}
     <div class="d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light py-5">
         
+        {# --- TARJETA 1: FORMULARIO --- #}
         <div class="card shadow-lg p-4 border-0 rounded-3 mb-5" style="max-width: 600px; width: 100%;">
             <div class="text-center mb-4">
                 <h2 class="fw-bold gradient-title">Subir Nueva Imagen</h2>
                 <hr class='divider'>
             </div>
 
-            {{ form(form, {'attr': {'class':'form-horizontal'}}) }}
-            <hr class="divider">
-            <button type="submit" class="btn btn-primary w-100 rounded-pill shadow-sm">Subir Imagen</button>
+            {# Usamos form_start y form_end para que el botón personalizado quede DENTRO del formulario #}
+            {{ form_start(form, {'attr': {'class':'form-horizontal'}}) }}
+                
+                {# Renderiza los campos del formulario #}
+                {{ form_widget(form) }}
+                
+                <hr class="divider">
+                        
+            {{ form_end(form) }}
         </div>
+
+        <div class="card shadow-lg border-0 rounded-3" style="max-width: 1000px; width: 100%;">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-white border-bottom">
+                            <tr>
+                                <th scope="col" class="ps-4">#</th>
+                                <th scope="col">Archivo</th>
+                                <th scope="col">Views</th>
+                                <th scope="col">Likes</th>
+                                <th scope="col">Descargas</th>
+                                <th scope="col" class="pe-4">Category</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for image in images %}
+                                <tr>
+                                    <td class="fw-bold ps-4">{{ image.id }}</td>
+                                    
+                                    <td>
+                                        <img src="{{ asset('images/index/gallery/' ~ image.file) }}" 
+                                                alt="Img {{ image.id }}" 
+                                                class="rounded shadow-sm" 
+                                                style="height: 50px; width: 80px; object-fit: cover;">
+                                    </td>
+                                    
+                                    <td>{{ image.numViews|default(0) }}</td>
+                                    
+                                    <td>{{ image.numLikes|default(0) }}</td>
+                                    
+                                    <td>{{ image.numDownloads|default(0) }}</td>
+                                    
+                                    <td class="pe-4">
+                                        {% if image.category %}
+                                            {{ image.category.name }}
+                                        {% else %}
+                                            <span class="text-muted small">Sin categoría</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-4 text-muted">
+                                        No hay imágenes subidas.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 {% endblock %}
