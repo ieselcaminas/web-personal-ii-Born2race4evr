@@ -17,7 +17,7 @@ class ImageFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('file', FileType::class,[
+            ->add('file', FileType::class,['attr' => ['class'=>'form-control']],[
                 'mapped' => false,
                 'constraints' => [
                     new File([
@@ -33,10 +33,15 @@ class ImageFormType extends AbstractType
             ->add('numViews', null, ['attr' => ['class'=>'form-control']])
             ->add('numDownloads', null, ['attr' => ['class'=>'form-control']])
             ->add('category', EntityType::class, array(
+                'attr' => [
+                    'class' => 'form-control'],
                 'class' => Category::class,
                 'choice_label' => 'name'))
-            ->add('Send', SubmitType::class, ['attr' => ['class'=>'pull-right btn btn-lg sr-button']])
-        ;
+            ->add('Send', SubmitType::class, [
+                'attr' => [
+                    'class'=>'pull-right btn btn-lg sr-button',
+                    'style' => 'margin-top: 20px;']])
+        ;           
     }
 
     public function configureOptions(OptionsResolver $resolver): void
