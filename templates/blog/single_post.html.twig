@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Start your development with LeadMark landing page.">
+    <meta name="author" content="Devcrud">
+    <title>{% block title %}Inicio{% endblock %}</title>
+    <!-- font icons -->
+    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
+    <!-- Bootstrap + LeadMark main styles -->
+	<link rel="stylesheet" href="{{ asset('assets/css/leadmark.css') }}">
+</head>
+    {% block body %}
+        {% if not post %}
+            <h2>Post not found</h2>
+        {% else %}
+            <div class="container py-5"> {# Padding vertical para separar del header/footer #}
+                <div class="row justify-content-center"> {# Centra la columna horizontalmente #}
+                    <div class="col-lg-8 col-md-10 text-center"> {# Ancho limitado y texto centrado #}
+                        
+                        {# TÍTULO #}
+                        <h1 class="display-4 fw-bold mb-3">{{ post.title }}</h1>
+
+                        {# INFO EXTRA (Autor y Fecha) #}
+                        <div class="text-muted mb-4">
+                            <small>
+                                {# Usamos un operador ternario: ¿Existe usuario? Si sí, pon su nombre. Si no, pon 'Anónimo' #}
+                                Escrito por <strong>{{ post.postUser ? post.postUser.name : 'Anónimo' }}</strong> | 
+                                {{ post.publishedAt | date('d \\d\\e F \\d\\e Y') }}
+                            </small>
+                        </div>
+
+                        {# IMAGEN #}
+                        {% if post.image %}
+                            <div class="mb-5">
+                                <img src="{{ asset('images/blog/' ~ post.image) }}" 
+                                    alt="{{ post.title }}" 
+                                    class="img-fluid rounded shadow-sm mx-auto d-block" 
+                                    style="max-height: 300px; width: auto;"> 
+                            </div>
+                        {% endif %}
+
+                        {# CONTENIDO #}
+                        {# 'text-start' para que el cuerpo del texto se lea mejor alineado a la izquierda #}
+                        <div class="content-body text-start lead mb-5">
+                            {# 'nl2br' convierte los saltos de línea del textarea en etiquetas <br> #}
+                            {{ post.content | nl2br }}
+                        </div>
+
+                        <hr class="my-4">
+
+                        {# BOTÓN VOLVER #}
+                        <a href="{{ path('blog') }}" class="btn btn-outline-primary px-4">
+                            ← Volver al Blog
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endblock %} 
+	
+	<!-- core  -->
+    <script src={{ asset("assets/vendors/jquery/jquery-3.4.1.js") }}></script>
+    <script src={{ asset("assets/vendors/bootstrap/bootstrap.bundle.js") }}></script>
+
+    <!-- bootstrap 3 affix -->
+    <script src={{ asset("assets/vendors/bootstrap/bootstrap.affix.js") }}></script>
+
+    <!-- Isotope -->
+    <script src={{ asset("assets/vendors/isotope/isotope.pkgd.js") }}></script>
+
+    <!-- LeadMark js -->
+    <script src={{ asset("assets/js/leadmark.js") }}></script>
+</body>
+</html>
+
+

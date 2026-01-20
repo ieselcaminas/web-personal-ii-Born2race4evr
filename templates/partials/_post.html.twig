@@ -1,0 +1,25 @@
+<div class="col-xs-12 col-sm-12">
+    <div class="post">
+        <div class="post-heading">
+            <span>{{ post.publishedAt | date('d') }} {{ post.publishedAt | date('F') }}</span>
+            
+            <img class="img-responsive" 
+                 src="{{ asset('images/blog/' ~ post.image) }}" 
+                 alt="{{post.title}}"
+                 style="width: {{ ancho | default('100%') }}; height: {{ alto | default('auto') }}; object-fit: cover;">
+                 
+        </div>
+        <div class="post-body">
+            <h3><a href="{{ path('single_post', {'id': post.id}) }}"><strong>{{post.title}}</strong></a></h3>
+            <hr>
+            <p>{{post.content[:300] ~ '...' }}</p>
+        </div>
+        <div class="post-footer">
+            <a class="btn" href="{{ path('single_post', {'id': post.id}) }}">READ MORE...</a>
+            <span>
+            <i class="fa fa-heart sr-icons"></i> {{post.numLikes}}
+            <i class="fa fa-comments sr-icons"></i> {{post.numComments}}
+            </span>
+        </div>
+    </div>
+</div>
