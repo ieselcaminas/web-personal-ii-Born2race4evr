@@ -1,0 +1,17 @@
+<div>
+    <hr>
+    <a href="{{ path('single_post', {'id': recent.id}) }}">
+        <strong>{{ recent.title }}</strong>
+    </a>
+
+    <h5> By <span>{{ recent.postUser ? recent.postUser.name : 'Anónimo' }}</span></h5>
+    
+    <p>{{ recent.publishedAt | date('d') }} {{ recent.publishedAt | date('F') }}</p>
+    
+    <p>
+        <i class="fa fa-clock-o sr-icons"></i>
+        {{ recent.publishedAt | date('h') }}
+        {{ recent.publishedAt | date('A') }}
+    </p>
+</div>
+

@@ -3,16 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Entity\Comment;
 use App\Entity\Contact;
 use App\Form\PostFormType;
+use App\Form\CommentFormType;
 use App\Form\ContactFormType;
+use App\Repository\PostRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 final class PageController extends AbstractController
 {
@@ -80,7 +83,7 @@ final class PageController extends AbstractController
         return $this->render('page/components.html.twig', []);
     }
 
-#[Route('/blog/new', name: 'new_post')]
+    #[Route('/blog/new', name: 'new_post')]
     public function newPost(ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger): Response
     {
         $post = new Post();
@@ -135,15 +138,37 @@ final class PageController extends AbstractController
     }
 
     #[Route('/single_post/{id}', name: 'single_post')]
-    public function post(ManagerRegistry $doctrine, $id): Response
+    public function post(ManagerRegistry $doctrine, Request $request, $id): Response
     {
-        $repositorio = $doctrine->getRepository(Post::class);
-        
-        $post = $repositorio->find($id);
-        
+        $repository = $doctrine->getRepository(Post::class);
+        $post = $repository->find($id);
+        /** @var PostRepository $repository */
+        $recents = $repository->findRecents();
+
+        $comment = new Comment();
+        $form = $this->createForm(CommentFormType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment = $form->getData();
+            
+            $comment->setPost($post);
+
+            $comment->setPublishedAt(new \DateTime()); 
+
+            $post->setNumComments($post->getNumComments() + 1);
+
+            $entityManager = $doctrine->getManager();    
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('single_post', ["id" => $post->getId()]);
+        }
+
         return $this->render('blog/single_post.html.twig', [
             'post' => $post,
+            'recents' => $recents,
+            'commentForm' => $form->createView()
         ]);
     }
-
 }

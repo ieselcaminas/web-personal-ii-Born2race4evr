@@ -5,75 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Start your development with LeadMark landing page.">
     <meta name="author" content="Devcrud">
-    <title>{% block title %}Inicio{% endblock %}</title>
-    <!-- font icons -->
-    <link rel="stylesheet" href="assets/vendors/themify-icons/css/themify-icons.css">
-    <!-- Bootstrap + LeadMark main styles -->
-	<link rel="stylesheet" href="{{ asset('assets/css/leadmark.css') }}">
+    <title>{% block title %}Post - {{ post ? post.title : 'No encontrado' }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('assets/vendors/themify-icons/css/themify-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/leadmark.css') }}">
 </head>
+<body>
     {% block body %}
         {% if not post %}
-            <h2>Post not found</h2>
+            <div class="container py-5 text-center">
+                <h2>Post not found</h2>
+                <a href="{{ path('blog') }}" class="btn btn-primary">Volver al Blog</a>
+            </div>
         {% else %}
-            <div class="container py-5"> {# Padding vertical para separar del header/footer #}
-                <div class="row justify-content-center"> {# Centra la columna horizontalmente #}
-                    <div class="col-lg-8 col-md-10 text-center"> {# Ancho limitado y texto centrado #}
+            <div class="container py-5"> 
+                <div class="row"> 
+                    
+                    {# ================================================= #}
+                    {# COLUMNA IZQUIERDA: EL POST Y LOS COMENTARIOS      #}
+                    {# ================================================= #}
+                    <div class="col-lg-8"> 
                         
-                        {# TÍTULO #}
+                        {# --- 1. DETALLES DEL POST --- #}
                         <h1 class="display-4 fw-bold mb-3">{{ post.title }}</h1>
 
-                        {# INFO EXTRA (Autor y Fecha) #}
                         <div class="text-muted mb-4">
                             <small>
-                                {# Usamos un operador ternario: ¿Existe usuario? Si sí, pon su nombre. Si no, pon 'Anónimo' #}
                                 Escrito por <strong>{{ post.postUser ? post.postUser.name : 'Anónimo' }}</strong> | 
                                 {{ post.publishedAt | date('d \\d\\e F \\d\\e Y') }}
                             </small>
                         </div>
 
-                        {# IMAGEN #}
                         {% if post.image %}
                             <div class="mb-5">
                                 <img src="{{ asset('images/blog/' ~ post.image) }}" 
                                     alt="{{ post.title }}" 
-                                    class="img-fluid rounded shadow-sm mx-auto d-block" 
-                                    style="max-height: 300px; width: auto;"> 
+                                    class="img-fluid rounded shadow-sm" 
+                                    style="width: 100%; height: auto;"> 
                             </div>
                         {% endif %}
 
-                        {# CONTENIDO #}
-                        {# 'text-start' para que el cuerpo del texto se lea mejor alineado a la izquierda #}
                         <div class="content-body text-start lead mb-5">
-                            {# 'nl2br' convierte los saltos de línea del textarea en etiquetas <br> #}
                             {{ post.content | nl2br }}
                         </div>
 
-                        <hr class="my-4">
+                        {# Botón para volver arriba (opcional, o volver al blog) #}
+                        <div class="mb-5">
+                            <a href="{{ path('blog') }}" class="btn btn-outline-primary btn-sm">
+                                <i class="ti-arrow-left"></i> Volver al Blog
+                            </a>
+                        </div>
 
-                        {# BOTÓN VOLVER #}
-                        <a href="{{ path('blog') }}" class="btn btn-outline-primary px-4">
-                            ← Volver al Blog
-                        </a>
+                        <hr class="my-5">
+
+                        {# --- 2. ZONA DE COMENTARIOS --- #}
+                        <div id="comments-section">
+                            
+                            {# A) Lista de Comentarios #}
+                            <h4 class="mb-4 font-weight-bold">Comentarios ({{ post.comments|length }})</h4>
+                            
+                            {% for comment in post.comments %}
+                                <div class="media mb-4 p-4 bg-light rounded shadow-sm">
+                                    <div class="media-body">
+                                        <div class="d-flex justify-content-between">
+                                            <h5 class="mt-0 font-weight-bold text-dark">{{ comment.name }}</h5>
+                                            <small class="text-muted">{{ comment.publishedAt ? comment.publishedAt|date('d/m/Y') : '' }}</small>
+                                        </div>
+                                        <p class="mb-0 text-secondary">{{ comment.text }}</p>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <p class="text-muted mb-5">No hay comentarios aún. ¡Sé el primero!</p>
+                            {% endfor %}
+
+                            <hr class="my-5">
+
+                            {# B) Formulario de Nuevo Comentario #}
+                            <h3 class="mb-4">Dejar un comentario</h3>
+                            
+                            {# El form se envía al controlador que configuramos #}
+                            {{ form_start(commentForm, {'attr': {'class': 'comment-form'}}) }}
+                                
+                                <div class="row">
+                                    {# Campo Nombre #}
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_widget(commentForm.name, {'attr': {'class': 'form-control', 'placeholder': 'Tu Nombre'}}) }}
+                                        <div class="text-danger small">{{ form_errors(commentForm.name) }}</div>
+                                    </div>
+
+                                    {# Campo Email #}
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_widget(commentForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Tu Email'}}) }}
+                                        <div class="text-danger small">{{ form_errors(commentForm.email) }}</div>
+                                    </div>
+                                </div>
+
+                                {# Campo Texto #}
+                                <div class="mb-3">
+                                    {{ form_widget(commentForm.text, {'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Escribe aquí tu comentario...'}}) }}
+                                    <div class="text-danger small">{{ form_errors(commentForm.text) }}</div>
+                                </div>
+
+                                {# Botón Enviar #}
+                                <div class="d-flex justify-content-end">
+                                    {{ form_widget(commentForm.Send, {'attr': {'class': 'btn btn-primary btn-lg'}}) }}
+                                </div>
+
+                            {{ form_end(commentForm) }}
+                        </div>
+                        {# --- FIN ZONA COMENTARIOS --- #}
 
                     </div>
+
+                    {# ================================================= #}
+                    {# COLUMNA DERECHA: BARRA LATERAL (SIDEBAR)          #}
+                    {# ================================================= #}
+                    <div class="col-lg-4">
+                        <div class="sidebar p-4 bg-light rounded sticky-top" style="top: 20px; z-index: 1;">
+                            <h4 class="mb-4 font-weight-bold">Últimos Posts</h4>
+                            
+                            {% for recent in recents %}
+                                {{ include ('partials/_recent_post.html.twig', {'recent': recent}) }}
+                            {% else %}
+                                <p>No hay publicaciones recientes.</p>
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+
                 </div>
             </div>
         {% endif %}
     {% endblock %} 
 	
-	<!-- core  -->
-    <script src={{ asset("assets/vendors/jquery/jquery-3.4.1.js") }}></script>
-    <script src={{ asset("assets/vendors/bootstrap/bootstrap.bundle.js") }}></script>
-
-    <!-- bootstrap 3 affix -->
-    <script src={{ asset("assets/vendors/bootstrap/bootstrap.affix.js") }}></script>
-
-    <!-- Isotope -->
-    <script src={{ asset("assets/vendors/isotope/isotope.pkgd.js") }}></script>
-
-    <!-- LeadMark js -->
-    <script src={{ asset("assets/js/leadmark.js") }}></script>
+	<script src="{{ asset('assets/vendors/jquery/jquery-3.4.1.js') }}"></script>
+    <script src="{{ asset('assets/vendors/bootstrap/bootstrap.bundle.js') }}"></script>
+    <script src="{{ asset('assets/vendors/bootstrap/bootstrap.affix.js') }}"></script>
+    <script src="{{ asset('assets/vendors/isotope/isotope.pkgd.js') }}"></script>
+    <script src="{{ asset('assets/js/leadmark.js') }}"></script>
 </body>
 </html>
-
-
